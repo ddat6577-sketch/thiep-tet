@@ -1,1 +1,213 @@
 # thiep-tet
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiệp Chúc Mừng Năm Mới</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #d32f2f, #ffcc70);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+/* ===== PHONG BÌ ===== */
+.envelope {
+    width: 90%;
+    max-width: 320px;
+    height: 220px;
+    background: #c62828;
+    border-radius: 14px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    overflow: hidden;
+}
+
+/* Nắp */
+.flap {
+    position: absolute;
+    inset: 0;
+    background: #b71c1c;
+    clip-path: polygon(0 0, 100% 0, 50% 55%);
+    transform-origin: top;
+    transition: transform 1s ease;
+    z-index: 3;
+}
+
+/* ===== THIỆP ===== */
+.card {
+    position: absolute;
+    left: 50%;
+    bottom: -120%;
+    transform: translateX(-50%);
+    width: 92%;
+    height: 190px;
+    background: #fff8e1;
+    border-radius: 12px;
+    padding: 18px;
+    box-sizing: border-box;
+    text-align: center;
+    opacity: 0;
+    transition: all 1.2s ease;
+}
+
+.card h1 {
+    color: #d32f2f;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.card p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* Mở */
+.envelope.open .flap {
+    transform: rotateX(180deg);
+}
+.envelope.open .card {
+    bottom: 12px;
+    opacity: 1;
+}
+
+/* Gợi ý */
+.hint {
+    position: absolute;
+    bottom: -36px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+}
+
+/* ===== HOA RƠI ===== */
+.flower {
+    position: fixed;
+    top: -50px;
+    font-size: 22px;
+    animation: fall linear infinite;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+/* ===== PHÁO HOA ===== */
+.firework {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    border-radius: 50%;
+    animation: boom 1.2s ease-out forwards;
+}
+
+@keyframes boom {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(20); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="envelope" onclick="openCard()">
+    <div class="flap"></div>
+
+    <div class="card">
+        <h1 id="title">🎆 Chúc Mừng Năm Mới 🎆</h1>
+        <p id="message"></p>
+    </div>
+
+    <div class="hint">👆 Nhấn để mở thiệp</div>
+</div>
+
+<!-- 🎵 NHẠC TẾT -->
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/01/11/audio_3b9a07cfc7.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ===== LỜI CHÚC ===== */
+const wishes = {
+    sep: `
+        Kính chúc Sếp năm mới<br>
+        🌸 An khang – Thịnh vượng 🌸<br>
+        🚀 Công việc hanh thông<br>
+        💼 Sự nghiệp vững bền
+    `,
+    dongnghiep: `
+        Chúc bạn năm mới<br>
+        💪 Nhiều năng lượng tích cực<br>
+        🤝 Hợp tác thành công<br>
+        🎯 Hoàn thành mọi mục tiêu
+    `,
+    giadinh: `
+        Chúc gia đình ta<br>
+        ❤️ Bình an – Hạnh phúc ❤️<br>
+        🏡 Sum vầy ấm áp<br>
+        🌼 Vạn sự như ý
+    `,
+    yeu: `
+        Chúc người anh yêu 💕<br>
+        🌸 Luôn rạng rỡ nụ cười<br>
+        💖 Yêu thương trọn vẹn<br>
+        ✨ Mãi bên nhau
+    `
+};
+
+// 👉 ĐỔI Ở ĐÂY: sep | dongnghiep | giadinh | yeu
+const doiTuong = "dongnghiep";
+
+document.getElementById("message").innerHTML = wishes[doiTuong];
+
+function openCard() {
+    document.querySelector('.envelope').classList.add('open');
+    document.getElementById("music").play();
+    fireworks();
+    flowers();
+}
+
+/* ===== HOA MAI / ĐÀO ===== */
+function flowers() {
+    setInterval(() => {
+        const f = document.createElement("div");
+        f.className = "flower";
+        f.innerHTML = Math.random() > 0.5 ? "🌸" : "🌼";
+        f.style.left = Math.random() * 100 + "vw";
+        f.style.animationDuration = (5 + Math.random() * 5) + "s";
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 10000);
+    }, 400);
+}
+
+/* ===== PHÁO HOA ===== */
+function fireworks() {
+    for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+            const fw = document.createElement("div");
+            fw.className = "firework";
+            fw.style.left = Math.random() * 100 + "vw";
+            fw.style.top = Math.random() * 60 + "vh";
+            document.body.appendChild(fw);
+            setTimeout(() => fw.remove(), 1200);
+        }, i * 300);
+    }
+}
+</script>
+
+</body>
+</html>
